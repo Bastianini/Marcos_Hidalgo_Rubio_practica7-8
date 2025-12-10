@@ -1,7 +1,7 @@
 from Libro import Libro
 from Revista import Revista
 # Importamos las funciones de tu archivo de utilidades
-# NOTA: Si renombras 'utilsB.py' a 'Utils.py' como pide el PDF, cambia la línea de abajo.
+
 from Utils import (
     crear_menu, 
     leer_cadena, 
@@ -80,12 +80,29 @@ def main():
                     print(f"❌ {e}")
 
         # OPCIÓN 4: CARGAR
+        # OPCIÓN 4: CARGAR
         elif opcion == 4:
             nombre = leer_nombre_archivo("Nombre del fichero a cargar: ")
             try:
-                # Cargamos y ACTUALIZAMOS la biblioteca actual
                 nuevos_datos = cargar_publicaciones(nombre)
-                biblioteca = nuevos_datos # Reemplazamos la memoria con lo del fichero
+                
+                # --- CAMBIO AQUÍ ---
+                if len(biblioteca) > 0:
+                    print(f"⚠️ Tienes {len(biblioteca)} publicaciones en memoria.")
+                    # Reutilizamos tu función leer_int para el menú
+                    decision = leer_int("¿Quieres sobrescribir (1) o fusionar/añadir (2)? ")
+                    
+                    if decision == 1:
+                        biblioteca = nuevos_datos # Sobrescribe (comportamiento original)
+                        print("🗑️ Memoria anterior borrada. Datos nuevos cargados.")
+                    else:
+                        biblioteca.extend(nuevos_datos) # Fusiona
+                        print("➕ Datos añadidos a la lista existente.")
+                else:
+                    # Si la lista estaba vacía, cargamos directamente
+                    biblioteca = nuevos_datos
+                # -------------------
+
             except ErrorArchivo as e:
                 print(f"❌ {e}")
 
